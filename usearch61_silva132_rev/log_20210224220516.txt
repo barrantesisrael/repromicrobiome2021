@@ -1,0 +1,178 @@
+Logging started at 22:05:16 on 24 Feb 2021
+QIIME version: 1.9.1
+
+qiime_config values:
+pick_otus_reference_seqs_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+sc_queue	all.q
+pynast_template_alignment_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set_aligned/85_otus.pynast.fasta
+cluster_jobs_fp	start_parallel_jobs.py
+assign_taxonomy_reference_seqs_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+torque_queue	friendlyq
+jobs_to_start	1
+denoiser_min_per_core	50
+assign_taxonomy_id_to_taxonomy_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
+temp_dir	/tmp/
+blastall_fp	blastall
+seconds_to_sleep	1
+
+parameter file values:
+filter_alignment:allowed_gap_frac	0.80
+filter_alignment:entropy_threshold	0.10
+filter_alignment:suppress_lane_mask_filter	True
+align_seqs.py:template_fp	SILVA_132_QIIME_release/core_alignment/80_core_alignment.fna
+assign_taxonomy:reference_seqs_fp	SILVA_132_QIIME_release/rep_set/rep_set_16S_only/97/silva_132_97_16S.fna
+assign_taxonomy:id_to_taxonomy_fp	SILVA_132_QIIME_release/taxonomy/16S_only/97/taxonomy_7_levels.txt
+parallel:jobs_to_start	1
+pick_otus:enable_rev_strand_match	True
+
+Input file md5 sums:
+intermediates/seqs.fna: 4df38508791b924d3ff125ff934ca818
+SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna: d9fd137e7517ff9eeae4b7579cce39a4
+
+Forcing --suppress_new_clusters as this is reference-based OTU picking.
+
+Executing commands.
+
+# Pick Reference OTUs command 
+pick_otus.py -i intermediates/seqs.fna -o intermediates/otu_open_usearch61_silva132_rev/step1_otus -r SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna -m usearch61_ref --enable_rev_strand_match --suppress_new_clusters
+
+Stdout:
+
+Stderr:
+
+# Generate full failures fasta file command 
+filter_fasta.py -f intermediates/seqs.fna -s intermediates/otu_open_usearch61_silva132_rev/step1_otus/seqs_failures.txt -o intermediates/otu_open_usearch61_silva132_rev/step1_otus/failures.fasta
+
+Stdout:
+
+Stderr:
+
+Executing commands.
+
+# Pick rep set command 
+pick_rep_set.py -i intermediates/otu_open_usearch61_silva132_rev/step1_otus/seqs_otus.txt -o intermediates/otu_open_usearch61_silva132_rev/step1_otus/step1_rep_set.fna -f intermediates/seqs.fna
+
+Stdout:
+
+Stderr:
+
+# Subsample the failures fasta file using API 
+python -c "import qiime; qiime.util.subsample_fasta('/placenta/intermediates/otu_open_usearch61_silva132_rev/step1_otus/failures.fasta', '/placenta/intermediates/otu_open_usearch61_silva132_rev/step2_otus/subsampled_failures.fasta', '0.100000')
+
+"Forcing --suppress_new_clusters as this is reference-based OTU picking.
+
+Executing commands.
+
+# Pick de novo OTUs for new clusters command 
+pick_otus.py -i intermediates/otu_open_usearch61_silva132_rev/step2_otus//subsampled_failures.fasta -o intermediates/otu_open_usearch61_silva132_rev/step2_otus/ -m usearch61  --denovo_otu_id_prefix New.ReferenceOTU --enable_rev_strand_match
+
+Stdout:
+
+Stderr:
+
+# Pick representative set for subsampled failures command 
+pick_rep_set.py -i intermediates/otu_open_usearch61_silva132_rev/step2_otus//subsampled_failures_otus.txt -o intermediates/otu_open_usearch61_silva132_rev/step2_otus//step2_rep_set.fna -f intermediates/otu_open_usearch61_silva132_rev/step2_otus//subsampled_failures.fasta
+
+Stdout:
+
+Stderr:
+
+# Pick reference OTUs using de novo rep set command 
+pick_otus.py -i intermediates/otu_open_usearch61_silva132_rev/step1_otus/failures.fasta -o intermediates/otu_open_usearch61_silva132_rev/step3_otus/ -r intermediates/otu_open_usearch61_silva132_rev/step2_otus//step2_rep_set.fna -m usearch61_ref --enable_rev_strand_match --suppress_new_clusters
+
+Stdout:
+
+Stderr:
+
+# Create fasta file of step3 failures command 
+filter_fasta.py -f intermediates/otu_open_usearch61_silva132_rev/step1_otus/failures.fasta -s intermediates/otu_open_usearch61_silva132_rev/step3_otus//failures_failures.txt -o intermediates/otu_open_usearch61_silva132_rev/step3_otus//failures_failures.fasta
+
+Stdout:
+
+Stderr:
+
+# Pick de novo OTUs on step3 failures command 
+pick_otus.py -i intermediates/otu_open_usearch61_silva132_rev/step3_otus//failures_failures.fasta -o intermediates/otu_open_usearch61_silva132_rev/step4_otus/ -m usearch61  --denovo_otu_id_prefix New.CleanUp.ReferenceOTU --enable_rev_strand_match
+
+Stdout:
+
+Stderr:
+
+# Merge OTU maps command 
+cat intermediates/otu_open_usearch61_silva132_rev/step1_otus/seqs_otus.txt intermediates/otu_open_usearch61_silva132_rev/step3_otus//failures_otus.txt intermediates/otu_open_usearch61_silva132_rev/step4_otus//failures_failures_otus.txt > intermediates/otu_open_usearch61_silva132_rev/final_otu_map.txt
+
+Stdout:
+
+Stderr:
+
+# Pick representative set for subsampled failures command 
+pick_rep_set.py -i intermediates/otu_open_usearch61_silva132_rev/step4_otus//failures_failures_otus.txt -o intermediates/otu_open_usearch61_silva132_rev/step4_otus//step4_rep_set.fna -f intermediates/otu_open_usearch61_silva132_rev/step3_otus//failures_failures.fasta
+
+Stdout:
+
+Stderr:
+
+# Filter singletons from the otu map using API 
+python -c "import qiime; qiime.filter.filter_otus_from_otu_map('/placenta/intermediates/otu_open_usearch61_silva132_rev/final_otu_map.txt', '/placenta/intermediates/otu_open_usearch61_silva132_rev/final_otu_map_mc2.txt', '2')"
+
+# Write non-singleton otus representative sequences from step1 to the final rep set file: intermediates/otu_open_usearch61_silva132_rev/rep_set.fna
+
+# Copy the full input refseqs file to the new refseq file
+cp SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna intermediates/otu_open_usearch61_silva132_rev/new_refseqs.fna
+
+# Write non-singleton otus representative sequences from step 2 and step 4 to the final representative set and the new reference set (intermediates/otu_open_usearch61_silva132_rev/rep_set.fna and intermediates/otu_open_usearch61_silva132_rev/new_refseqs.fna respectively)
+
+Executing commands.
+
+# Make the otu table command 
+make_otu_table.py -i intermediates/otu_open_usearch61_silva132_rev/final_otu_map_mc2.txt -o intermediates/otu_open_usearch61_silva132_rev/otu_table_mc2.biom
+
+Stdout:
+
+Stderr:
+
+Executing commands.
+
+# Assign taxonomy command 
+assign_taxonomy.py -o intermediates/otu_open_usearch61_silva132_rev/uclust_assigned_taxonomy -i intermediates/otu_open_usearch61_silva132_rev/rep_set.fna --reference_seqs_fp SILVA_132_QIIME_release/rep_set/rep_set_16S_only/97/silva_132_97_16S.fna --id_to_taxonomy_fp SILVA_132_QIIME_release/taxonomy/16S_only/97/taxonomy_7_levels.txt
+
+Stdout:
+
+Stderr:
+
+Executing commands.
+
+# Add taxa to OTU table command 
+biom add-metadata -i intermediates/otu_open_usearch61_silva132_rev/otu_table_mc2.biom --observation-metadata-fp intermediates/otu_open_usearch61_silva132_rev/uclust_assigned_taxonomy/rep_set_tax_assignments.txt -o intermediates/otu_open_usearch61_silva132_rev/otu_table_mc2_w_tax.biom --sc-separated taxonomy --observation-header OTUID,taxonomy
+
+Stdout:
+
+Stderr:
+
+Executing commands.
+
+# Align sequences command 
+align_seqs.py -i intermediates/otu_open_usearch61_silva132_rev/rep_set.fna -o intermediates/otu_open_usearch61_silva132_rev/pynast_aligned_seqs 
+
+Stdout:
+
+Stderr:
+
+# Filter alignment command 
+filter_alignment.py -o intermediates/otu_open_usearch61_silva132_rev/pynast_aligned_seqs -i intermediates/otu_open_usearch61_silva132_rev/pynast_aligned_seqs/rep_set_aligned.fasta --allowed_gap_frac 0.80 --entropy_threshold 0.10 --suppress_lane_mask_filter
+
+Stdout:
+
+Stderr:
+
+# Build phylogenetic tree command 
+make_phylogeny.py -i intermediates/otu_open_usearch61_silva132_rev/pynast_aligned_seqs/rep_set_aligned_pfiltered.fasta -o intermediates/otu_open_usearch61_silva132_rev/rep_set.tre 
+
+Stdout:
+
+Stderr:
+
+Executing commands.
+
+
+Logging stopped at 07:20:47 on 25 Feb 2021
