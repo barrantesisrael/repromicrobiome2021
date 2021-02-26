@@ -1,0 +1,64 @@
+Logging started at 16:01:21 on 21 Feb 2021
+QIIME version: 1.9.1
+
+qiime_config values:
+pick_otus_reference_seqs_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+sc_queue	all.q
+pynast_template_alignment_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set_aligned/85_otus.pynast.fasta
+cluster_jobs_fp	start_parallel_jobs.py
+assign_taxonomy_reference_seqs_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/rep_set/97_otus.fasta
+torque_queue	friendlyq
+jobs_to_start	1
+denoiser_min_per_core	50
+assign_taxonomy_id_to_taxonomy_fp	/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime_default_reference-0.1.3-py2.7.egg/qiime_default_reference/gg_13_8_otus/taxonomy/97_otu_taxonomy.txt
+temp_dir	/tmp/
+blastall_fp	blastall
+seconds_to_sleep	1
+
+parameter file values:
+align_seqs.py:template_fp	SILVA_119_QIIME_release/core_alignment/core_Silva119_alignment.fna
+filter_alignment:allowed_gap_frac	0.80
+filter_alignment:entropy_threshold	0.10
+filter_alignment:suppress_lane_mask_filter	True
+assign_taxonomy:reference_seqs_fp	SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna
+assign_taxonomy:id_to_taxonomy_fp	SILVA_119_QIIME_release/taxonomy/97/taxonomy_97_7_levels.txt
+parallel:jobs_to_start	1
+
+Input file md5 sums:
+intermediates/seqs.fna: 4df38508791b924d3ff125ff934ca818
+SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna: d9fd137e7517ff9eeae4b7579cce39a4
+
+Forcing --suppress_new_clusters as this is reference-based OTU picking.
+
+Executing commands.
+
+# Pick Reference OTUs command 
+pick_otus.py -i intermediates/seqs.fna -o intermediates/OTU_SILVA_OPEN_20210222/step1_otus -r SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna -m usearch61_ref  --suppress_new_clusters
+
+
+
+*** ERROR RAISED DURING STEP: Pick Reference OTUs
+Command run was:
+ pick_otus.py -i intermediates/seqs.fna -o intermediates/OTU_SILVA_OPEN_20210222/step1_otus -r SILVA_119_QIIME_release/rep_set/97/Silva_119_rep_set97.fna -m usearch61_ref  --suppress_new_clusters
+Command returned exit status: 1
+Stdout:
+
+Stderr
+Traceback (most recent call last):
+  File "/opt/conda/envs/qiime1env/bin//pick_otus.py", line 4, in <module>
+    __import__('pkg_resources').run_script('qiime==1.9.1', 'pick_otus.py')
+  File "/opt/conda/envs/qiime1env/lib/python2.7/site-packages/pkg_resources/__init__.py", line 666, in run_script
+    self.require(requires)[0].run_script(script_name, ns)
+  File "/opt/conda/envs/qiime1env/lib/python2.7/site-packages/pkg_resources/__init__.py", line 1462, in run_script
+    exec(code, namespace, namespace)
+  File "/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime-1.9.1-py2.7.egg/EGG-INFO/scripts/pick_otus.py", line 1004, in <module>
+    main()
+  File "/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime-1.9.1-py2.7.egg/EGG-INFO/scripts/pick_otus.py", line 897, in main
+    otu_prefix=otu_prefix, HALT_EXEC=False)
+  File "/opt/conda/envs/qiime1env/lib/python2.7/site-packages/qiime-1.9.1-py2.7.egg/qiime/pick_otus.py", line 1800, in __call__
+    HALT_EXEC=HALT_EXEC
+  File "build/bdist.linux-x86_64/egg/bfillings/usearch.py", line 1844, in usearch61_ref_cluster
+burrito.util.ApplicationError: Error running usearch61. Possible causes are unsupported version (current supported version is usearch v6.1.544) is installed or improperly formatted input file was provided
+
+
+Logging stopped at 16:01:28 on 21 Feb 2021

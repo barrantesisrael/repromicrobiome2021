@@ -1,0 +1,4 @@
+pick_otus:enable_rev_strand_match True
+filter_alignment:allowed_gap_frac 0.80
+filter_alignment:entropy_threshold 0.10
+filter_alignment:suppress_lane_mask_filter True
